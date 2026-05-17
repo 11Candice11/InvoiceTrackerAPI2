@@ -52,21 +52,25 @@ public class AuthService(AppDbContext db, IConfiguration config) : IAuthService
     public async Task ForgotPasswordAsync(ForgotPasswordDto dto)
     {
         var user = await db.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-        if (user is null) return; // Don't reveal whether the email exists
+        if (user is null) return;
 
-        user.PasswordResetToken        = Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
-        user.PasswordResetTokenExpiry  = DateTime.UtcNow.AddHours(1);
+        var plaintext = Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
+
+        user.PasswordResetToken       = HashToken(plaintext);
+        user.PasswordResetTokenExpiry = DateTime.UtcNow.AddHours(1);
         await db.SaveChangesAsync();
 
-        // TODO: send email with reset link containing the token
-        // e.g. https://yourapp.com/reset-password?token={user.PasswordResetToken}&email={user.Email}
+        // TODO: send email with reset link containing the plaintext token
+        // e.g. https://yourapp.com/reset-password?token={plaintext}&email={user.Email}
     }
 
     public async Task ResetPasswordAsync(ResetPasswordDto dto)
     {
+        var tokenHash = HashToken(dto.Token);
+
         var user = await db.Users.FirstOrDefaultAsync(u =>
             u.Email == dto.Email &&
-            u.PasswordResetToken == dto.Token &&
+            u.PasswordResetToken == tokenHash &&
             u.PasswordResetTokenExpiry > DateTime.UtcNow)
             ?? throw new InvalidOperationException("Invalid or expired reset token.");
 
@@ -77,6 +81,10 @@ public class AuthService(AppDbContext db, IConfiguration config) : IAuthService
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
+
+    // store SHA-256 hash of the token — plaintext is sent to user's email only
+    private static string HashToken(string token) =>
+        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(token)));
 
 // GenerateJwt creates token with:
 //  - user id

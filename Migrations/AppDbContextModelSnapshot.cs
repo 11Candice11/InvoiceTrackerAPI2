@@ -65,6 +65,10 @@ namespace InvoiceTrackerAPI2.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("UserId", "IssueDate");
+
+                    b.HasIndex("UserId", "Status");
+
                     b.ToTable("Invoices");
                 });
 

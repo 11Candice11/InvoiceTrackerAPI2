@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using InvoiceTrackerAPI2.Models.Enums;
 
 namespace InvoiceTrackerAPI2.DTOs;
@@ -14,6 +15,7 @@ public record CreateInvoiceDto
     [StringLength(200, ErrorMessage = "Client email must not exceed 200 characters.")]
     public string ClientEmail { get; init; } = string.Empty;
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     [EnumDataType(typeof(InvoiceStatus), ErrorMessage = "Invalid invoice status.")]
     public InvoiceStatus Status { get; init; } = InvoiceStatus.Draft;
 

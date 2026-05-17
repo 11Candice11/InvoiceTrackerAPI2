@@ -144,3 +144,7 @@
 /Users/candiceyeatman/Library/Mobile Documents/com~apple~CloudDocs/PrivateGit/InvoiceTracker/API/InvoiceTrackerAPI2/bin/Debug/net9.0/Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore.dll
 /Users/candiceyeatman/Library/Mobile Documents/com~apple~CloudDocs/PrivateGit/InvoiceTracker/API/InvoiceTrackerAPI2/bin/Debug/net9.0/Microsoft.Extensions.FileProviders.Abstractions.dll
 /Users/candiceyeatman/Library/Mobile Documents/com~apple~CloudDocs/PrivateGit/InvoiceTracker/API/InvoiceTrackerAPI2/bin/Debug/net9.0/Microsoft.Extensions.Hosting.Abstractions.dll
+/Users/candiceyeatman/Library/Mobile Documents/com~apple~CloudDocs/PrivateGit/InvoiceTracker/API/InvoiceTrackerAPI2/obj/Debug/net9.0/InvoiceTrackerAPI2.sourcelink.json
+/Users/CandiceYeatman/Library/Mobile Documents/com~apple~CloudDocs/PrivateGit/InvoiceTracker/API/InvoiceTrackerAPI2/bin/Debug/net9.0/BouncyCastle.Cryptography.dll
+/Users/CandiceYeatman/Library/Mobile Documents/com~apple~CloudDocs/PrivateGit/InvoiceTracker/API/InvoiceTrackerAPI2/bin/Debug/net9.0/MailKit.dll
+/Users/CandiceYeatman/Library/Mobile Documents/com~apple~CloudDocs/PrivateGit/InvoiceTracker/API/InvoiceTrackerAPI2/bin/Debug/net9.0/MimeKit.dll

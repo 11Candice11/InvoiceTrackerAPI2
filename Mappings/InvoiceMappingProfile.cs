@@ -27,6 +27,15 @@ public class InvoiceMappingProfile : Profile
             .ForMember(d => d.InvoiceNumber, o => o.Ignore())
             .ForMember(d => d.User,          o => o.Ignore());
 
+        // null fields are skipped — only provided fields are applied
+        CreateMap<UpdateInvoiceDto, Invoice>()
+            .ForMember(d => d.Id,            o => o.Ignore())
+            .ForMember(d => d.UserId,        o => o.Ignore())
+            .ForMember(d => d.InvoiceNumber, o => o.Ignore())
+            .ForMember(d => d.User,          o => o.Ignore())
+            .ForMember(d => d.Status,        o => o.Ignore())
+            .ForAllMembers(o => o.Condition((_, _, srcVal) => srcVal is not null));
+
         CreateMap<CreateLineItemDto, LineItem>()
             .ForMember(d => d.Id,        o => o.Ignore())
             .ForMember(d => d.InvoiceId, o => o.Ignore())

@@ -30,6 +30,18 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             // store enum as string 
             .HasConversion<string>();
 
+        // all queries filter by UserId first — most selective index
+        modelBuilder.Entity<Invoice>()
+            .HasIndex(i => i.UserId);
+
+        // covers ORDER BY IssueDate and date range filters (From/To)
+        modelBuilder.Entity<Invoice>()
+            .HasIndex(i => new { i.UserId, i.IssueDate });
+
+        // covers status filter tab/dropdown queries
+        modelBuilder.Entity<Invoice>()
+            .HasIndex(i => new { i.UserId, i.Status });
+
         modelBuilder.Entity<LineItem>()
             .HasOne(l => l.Invoice)
             .WithMany(i => i.LineItems)

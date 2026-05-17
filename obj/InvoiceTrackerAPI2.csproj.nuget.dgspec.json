@@ -5,7 +5,7 @@
   },
   "projects": {
     "/Users/candiceyeatman/Library/Mobile Documents/com~apple~CloudDocs/PrivateGit/InvoiceTracker/API/InvoiceTrackerAPI2/InvoiceTrackerAPI2.csproj": {
-      "version": "1.0.0",
+      "version": "2.0.45",
       "restore": {
         "projectUniqueName": "/Users/candiceyeatman/Library/Mobile Documents/com~apple~CloudDocs/PrivateGit/InvoiceTracker/API/InvoiceTrackerAPI2/InvoiceTrackerAPI2.csproj",
         "projectName": "InvoiceTrackerAPI2",
@@ -51,6 +51,10 @@
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.0.3, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.11.0, )"
             },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",

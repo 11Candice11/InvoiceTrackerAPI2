@@ -1,10 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using InvoiceTrackerAPI2.Models.Enums;
 
 namespace InvoiceTrackerAPI2.DTOs;
-// all fields are nullable (only send what you want 2 update)
-// partial update pattern
-// TODO controller maps through CreateInvoiceDto - fix this to use UpdateInvoiceDto
 
 public record UpdateInvoiceDto
 {
@@ -19,8 +15,8 @@ public record UpdateInvoiceDto
 
     public DateTime? DueDate { get; init; }
 
-    [EnumDataType(typeof(InvoiceStatus), ErrorMessage = "Invalid invoice status.")]
-    public InvoiceStatus? Status { get; init; }
+    [Range(0, 1, ErrorMessage = "VAT rate must be between 0 and 1 (e.g. 0.15 for 15%).")]
+    public decimal? VatRate { get; init; }
 
     [StringLength(1000, ErrorMessage = "Notes must not exceed 1000 characters.")]
     public string? Notes { get; init; }

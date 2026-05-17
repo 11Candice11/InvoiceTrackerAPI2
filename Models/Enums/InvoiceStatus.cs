@@ -8,4 +8,3 @@ public enum InvoiceStatus
     Overdue,
     Cancelled
 }
-// TODO enforce lifecycle - add rules

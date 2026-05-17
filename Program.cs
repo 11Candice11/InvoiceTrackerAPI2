@@ -1,7 +1,6 @@
 // TODO add RabbitMQ for async processing of invoice creation and updates
-// TODO add Redis for caching of invoice data and improving performance of read operations  
+// TODO add Redis for caching of invoice data and improving performance of read operations
 // TODO add Rate limiting especially to auth endpoints
-// TODO add pagination on invoice list
 // TODO renew and revoke JWT 
 
 
@@ -29,8 +28,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         opt.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer           = true,
-            ValidateAudience         = true,
+            ValidateIssuer           = true, // InvoiceTrackerAPI
+            ValidateAudience         = true, //InvoiceTrackerUI
             ValidateLifetime         = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer              = builder.Configuration["Jwt:Issuer"],
@@ -47,9 +46,11 @@ builder.Services.AddAuthorization();
 // AppDbContext must be scoped
 // TODO AddSingleton vs AddScoped
 
+builder.Services.AddHostedService<OverdueInvoiceJob>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<InvoiceMappingProfile>());
 
 // ── Health checks ─────────────────────────────────────────────────────────────
@@ -57,12 +58,18 @@ builder.Services.AddHealthChecks()
     .AddDbContextCheck<AppDbContext>("database");
 
 
+var allowedOrigins = (builder.Configuration["Cors:AllowedOrigins"] ?? "")
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(p =>
-    p.WithOrigins("http://localhost:5173")
+    p.WithOrigins(allowedOrigins)
      .AllowAnyHeader()
      .AllowAnyMethod()));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opt =>
+        opt.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter()));
 builder.Services.AddOpenApi();
 
 var app = builder.Build();

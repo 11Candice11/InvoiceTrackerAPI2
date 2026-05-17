@@ -10,7 +10,7 @@ namespace InvoiceTrackerAPI2.Repositories;
 public class InvoiceRepository(AppDbContext db) : IInvoiceRepository
 {
     // builds query incrementally
-    public async Task<IEnumerable<Invoice>> GetAllAsync(int userId, InvoiceFilterDto filter)
+    public async Task<(IEnumerable<Invoice> Items, int Total)> GetAllAsync(int userId, InvoiceFilterDto filter)
     {
         var query = db.Invoices
             .Include(i => i.LineItems)
@@ -28,7 +28,14 @@ public class InvoiceRepository(AppDbContext db) : IInvoiceRepository
         if (filter.To is not null)
             query = query.Where(i => i.IssueDate <= filter.To);
 
-        return await query.OrderByDescending(i => i.IssueDate).ToListAsync();
+        var ordered = query.OrderByDescending(i => i.IssueDate);
+        var total   = await ordered.CountAsync();
+        var items   = await ordered
+            .Skip((filter.Page - 1) * filter.PageSize)
+            .Take(filter.PageSize)
+            .ToListAsync();
+
+        return (items, total);
     }
 
     public Task<Invoice?> GetByIdAsync(int id, int userId) =>
